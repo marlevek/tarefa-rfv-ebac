@@ -1,8 +1,8 @@
-import numpy as np 
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from datetime import datetime
-from PIL import Image
-from io import BytesIO
-import streamlit as st 
+pandas==2.2.2
+pandas-datareader==0.10.0
+seaborn==0.13.2
+matplotlib==3.9.0
+matplotlib-inline==0.1.6
+streamlit==1.35.0
+protobuf==4.25.3
+openpyxl==3.1.5
