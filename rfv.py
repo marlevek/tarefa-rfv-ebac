@@ -2,10 +2,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from datetime import datetime
+from datetime import datetime 
 from PIL import Image
 from io import BytesIO
 import streamlit as st 
+from sklearn.cluster import KMeans
 
 # Set no tema do seaborn para melhorar o visual
 custom_params = ['axes.spines.right: False', 'axes.spines.top:False']
@@ -29,14 +30,19 @@ def to_excel(df):
     processed_data = output.getvalue()
     return processed_data
 
+def perform_clustering(data, n_clusters):
+    model = KMeans(n_clusters=n_clusters)
+    model.fit(data)
+    return model.labels_
+
+
 # Função principal da aplicação
 def main():
     st.set_page_config(
         page_title = 'RFV',
         layout = 'wide',
-        initial_sidebar_state = 'expanded'
-    )
-    
+        initial_sidebar_state = 'expanded')
+
 # Título principal da aplicação
 st.write('''# RFV
          RFV significa recência, frequência e valor, e é utilizado para segmentação de clientes baseado no comportamento de compras e agrupa eles em clusters parecidos. Utilizando esse tipo de agrupamento podemos realizar ações de marketing e CRM melhores direcionados, ajudando assim na personalização do conteúdo e até a retenção de clientes.
@@ -172,8 +178,15 @@ if (data_file_1 is not None):
     st.write('Quantidade de clientes por tipo de ação')
     st.write(df_RFV['acoes de marketing/crm'].value_counts(dropna=False))
 
-
-
+    st.write('## Clusterização de Dados')
+    n_clusters = st.slider('Número de clusters', min_value=2, max_value=10)
+    if st.button('Executar Clusterização'):
+        labels = perform_clustering(df_RFV[['Recencia', 'Frequencia', 'Valor']], n_clusters)
+        df_RFV['Cluster'] = labels
+    
+        st.write('Clusters atribuídos: ', labels)
+        df_RFV['Cluster'] = labels
+        st.write(df_RFV.head())
 
     
 
